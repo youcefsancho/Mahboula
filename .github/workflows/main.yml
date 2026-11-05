@@ -1,45 +1,61 @@
 name: Deploy to GitHub Pages
+
 on:
   push:
     branches: [main]
   workflow_dispatch:
+
 permissions:
   contents: read
   pages: write
   id-token: write
+
 concurrency:
   group: pages
   cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-
+      
 uses: actions/checkout@v4
+
+      
 uses: actions/setup-node@v4
-    with:
-      node-version: 22
+      with:
+        node-version: 22
+
+      
 name: Put files into folders
-  run: |
-    mkdir -p src/pages src/components src/hooks src/lib src/routes public
-    mv App.tsx main.tsx index.css src/
-    mv index.tsx src/routes/
-    mv useLocal.ts src/hooks/
-    mv api.ts player.ts src/lib/
-    mv Star.tsx Splash.tsx BottomNav.tsx MiniPlayer.tsx src/components/
-    mv Home.tsx Quran.tsx Hadith.tsx Podcasts.tsx Videos.tsx src/pages/
-    mv manifest.json icon.svg sw.js public/
+      run: |
+        mkdir -p src/pages src/components src/hooks src/lib src/routes public
+        mv App.tsx main.tsx index.css src/
+        mv index.tsx src/routes/
+        mv useLocal.ts src/hooks/
+        mv api.ts player.ts src/lib/
+        mv Star.tsx Splash.tsx BottomNav.tsx MiniPlayer.tsx src/components/
+        mv Home.tsx Quran.tsx Hadith.tsx Podcasts.tsx Videos.tsx src/pages/
+        mv manifest.json icon.svg sw.js public/
+
+      
 run: npm install
+
+      
 run: npm run build
+
+      
 uses: actions/upload-pages-artifact@v3
-with:
-  path: ./dist
-deploy:
-  needs: build
-  runs-on: ubuntu-latest
-  environment:
-    name: github-pages
-    url: ${{ steps.deployment.outputs.page_url }}
-  steps:
+      with:
+        path: ./dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      
 id: deployment
-    uses: actions/deploy-pages@v4
+      uses: actions/deploy-pages@v4
