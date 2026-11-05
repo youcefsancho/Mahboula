@@ -1,0 +1,1 @@
+export default {content:['./index.html','./src/**/*.{ts,tsx}'],theme:{extend:{colors:{blush:'#FFF0F5',gold:'#D4AF37',neon:'#FF6FAE'},fontFamily:{sans:['Plus Jakarta Sans','sans-serif'],quran:['Amiri','serif']}}}};
