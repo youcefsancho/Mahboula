@@ -7,52 +7,43 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-name: Checkout
-      uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
 
-name: Setup Node
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20
+      - name: Install dependencies
+        run: npm install
 
+      - name: Install Capacitor
+        run: npm install @capacitor/core@6 @capacitor/cli@6 @capacitor/android@6
 
-name: Setup Java
-      uses: actions/setup-java@v4
-      with:
-        distribution: temurin
-        java-version: 17
+      - name: Build web
+        run: npm run build
 
+      - name: Add Android
+        run: npx cap add android
 
-name: Install dependencies
-      run: npm install
+      - name: Sync Android
+        run: npx cap sync android
 
+      - name: Build APK
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug
 
-name: Install Capacitor
-      run: npm install @capacitor/core@6 @capacitor/cli@6 @capacitor/android@6
-
-
-name: Build web
-      run: npm run build
-
-
-name: Add Android
-      run: npx cap add android
-
-
-name: Sync Android
-      run: npx cap sync android
-
-
-name: Build APK
-      run: |
-        cd android
-        chmod +x gradlew./gradlew assembleDebug
-
-
-name: Upload APK
-      uses: actions/upload-artifact@v4
-      with:
-        name: SANCHA-APK
-        path: android/app/build/outputs/apk/debug/app-debug.apk
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: SANCHA-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
